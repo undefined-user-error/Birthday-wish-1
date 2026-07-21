@@ -135,7 +135,6 @@ html,body{
 #scene-intro .btn{ animation:lineIn 1.2s ease 4.2s forwards; opacity:0; }
 
 /* ---------- Scene: name reveal ---------- */
-#scene-name{ }
 .name-caption{
   position:absolute; bottom:14%;
   font-family:var(--font-elegant); font-style:italic; opacity:0;
@@ -184,7 +183,7 @@ html,body{
   font-size:clamp(1.3rem,3.4vw,2.1rem); opacity:0;
   animation:fadeIn2 1.5s ease 1s forwards;
 }
-.firefly, .petal, .butterfly, .balloon{ position:absolute; pointer-events:none; }
+.firefly, .petal, .butterfly{ position:absolute; pointer-events:none; }
 .firefly{
   width:5px; height:5px; border-radius:50%;
   background:var(--gold); box-shadow:0 0 8px 3px rgba(255,209,102,0.8);
@@ -209,13 +208,6 @@ html,body{
   75%{ transform:translate(30px,30px) rotate(6deg); }
   100%{ transform:translate(0,0) rotate(0deg); }
 }
-.butterfly.landed{ animation:none; }
-.sparkle-burst{
-  position:absolute; width:6px; height:6px; border-radius:50%;
-  background:var(--white); box-shadow:0 0 12px 4px rgba(255,255,255,0.9);
-  animation:sparklePop 1.2s ease-out forwards;
-}
-@keyframes sparklePop{ 0%{transform:scale(0); opacity:1;} 60%{transform:scale(1.4); opacity:1;} 100%{transform:scale(0.4); opacity:0;} }
 
 /* ---------- Scene: balloons ---------- */
 #scene-balloons{ overflow:hidden; }
@@ -254,7 +246,7 @@ html,body{
 .cake-tier.top{ top:0; height:38px; background:linear-gradient(#fff, var(--pink)); }
 .cake-tier.frosting{ top:30px; height:14px; background:var(--white); border-radius:50%/100%; opacity:0.9; }
 .cake-tier.base{ top:42px; height:60px; background:linear-gradient(#fff3c4, var(--sunflower)); border-radius:6px 6px 10px 10px;}
-.cake-caption{ margin-top:2.4rem; opacity:0; }
+.cake-caption{ margin-top:2.4rem; opacity:0; transition:opacity 1s ease; }
 .cake-caption .title-script{ display:block; }
 .cake-caption .name-line{ font-family:var(--font-display); letter-spacing:0.08em; font-size:clamp(1.4rem,4vw,2.2rem); color:var(--white); margin-top:0.4rem; }
 
@@ -354,13 +346,15 @@ html,body{
 @keyframes bloom{ 0%{ transform:scale(0) rotate(-30deg); opacity:0;} 100%{ transform:scale(1) rotate(0deg); opacity:1;} }
 #easter-egg p{ margin-top:1rem; font-family:var(--font-elegant); font-style:italic; font-size:clamp(1rem,3vw,1.4rem); max-width:26rem; }
 
-/* ---------- Mute toggle ---------- */
+/* ---------- Flute Audio Toggle Button ---------- */
 #mute-toggle{
   position:fixed; top:1.2rem; right:1.2rem; z-index:30;
-  width:38px; height:38px; border-radius:50%; border:1px solid rgba(255,209,102,0.4);
-  background:rgba(255,255,255,0.06); color:var(--gold); cursor:pointer; font-size:1rem;
+  width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,209,102,0.4);
+  background:rgba(255,255,255,0.08); color:var(--gold); cursor:pointer; font-size:1.2rem;
   display:flex; align-items:center; justify-content:center;
+  backdrop-filter:blur(6px); transition:all .3s ease;
 }
+#mute-toggle:hover{ transform:scale(1.08); background:rgba(255,209,102,0.2); }
 
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
@@ -370,7 +364,7 @@ html,body{
 <body>
 
 <canvas id="bgCanvas"></canvas>
-<button id="mute-toggle" aria-label="Toggle music" title="Toggle music">🔈</button>
+<button id="mute-toggle" aria-label="Toggle Flute Music" title="Toggle Flute Music">🪈</button>
 
 <!-- SCENE 1: LOADING -->
 <section class="scene active" id="scene-loading">
@@ -390,7 +384,7 @@ html,body{
   <button class="btn" id="beginBtn">Begin the Journey</button>
 </section>
 
-<!-- SCENE 3: FLIGHT (canvas only, minimal DOM) -->
+<!-- SCENE 3: FLIGHT -->
 <section class="scene" id="scene-flight">
   <div class="eyebrow" style="opacity:0.5">✨ ☄️ ⭐</div>
 </section>
@@ -407,20 +401,20 @@ html,body{
   <div class="sunrise-text line" style="font-family:var(--font-elegant)">the night gives way to something warmer</div>
 </section>
 
-<!-- SCENE 6/7: SUNFLOWER FIELD + BUTTERFLIES -->
+<!-- SCENE 6: SUNFLOWER FIELD -->
 <section class="scene" id="scene-field">
   <div class="field-sky"></div>
   <div class="field-row" id="fieldRow"></div>
   <div class="field-caption">Every sunflower<br>turns toward<br>the light.</div>
 </section>
 
-<!-- SCENE 8: BALLOONS -->
+<!-- SCENE 7: BALLOONS -->
 <section class="scene" id="scene-balloons">
   <div class="balloon-sky"></div>
   <div id="balloonField"></div>
 </section>
 
-<!-- SCENE 9: CAKE -->
+<!-- SCENE 8: CAKE -->
 <section class="scene" id="scene-cake">
   <div class="cake-wrap">
     <div class="candles-row" id="candlesRow"></div>
@@ -436,12 +430,12 @@ html,body{
   </div>
 </section>
 
-<!-- SCENE 10: FIREWORKS -->
+<!-- SCENE 9: FIREWORKS -->
 <section class="scene" id="scene-fireworks">
   <div class="fw-name">Aakriti Gahire</div>
 </section>
 
-<!-- SCENE 11: ENVELOPE + LETTER -->
+<!-- SCENE 10: ENVELOPE + LETTER -->
 <section class="scene" id="scene-envelope">
   <div class="envelope" id="envelope">
     <div class="env-flap"></div>
@@ -464,26 +458,26 @@ html,body{
   </div>
 </div>
 
-<!-- SCENE 12: SPARKLE RAIN (overlay div, generated) -->
+<!-- SCENE 11: SPARKLE RAIN -->
 <section class="scene" id="scene-sparkles">
   <div id="sparkleField"></div>
   <div class="eyebrow">✨</div>
 </section>
 
-<!-- SCENE 13: MAKE A WISH -->
+<!-- SCENE 12: MAKE A WISH -->
 <section class="scene" id="scene-wish">
   <div class="wish-caption line" style="font-family:var(--font-elegant)">close your eyes, and make a wish</div>
   <button class="btn" id="wishBtn">Make a Wish</button>
 </section>
 
-<!-- SCENE 14: NIGHT -->
+<!-- SCENE 13: NIGHT -->
 <section class="scene" id="scene-night">
   <div class="night-sky"></div>
   <div class="moon"></div>
   <div class="night-caption line" style="font-family:var(--font-elegant)">the stars are listening</div>
 </section>
 
-<!-- SCENE 15: TRANSFORM (canvas driven) -->
+<!-- SCENE 14: TRANSFORM -->
 <section class="scene" id="scene-transform">
   <div class="eyebrow" style="opacity:0.4">❤ → 🌻</div>
 </section>
@@ -505,12 +499,6 @@ html,body{
   <div class="egg-flower">🌻</div>
   <p>May today bring you a little more happiness than yesterday. 🌻</p>
 </div>
-
-<!-- Optional music hooks: drop your own mp3 files alongside this html with these exact names to enable sound -->
-<audio id="music-piano" loop preload="none"><source src="music/piano.mp3" type="audio/mpeg"></audio>
-<audio id="music-strings" loop preload="none"><source src="music/strings.mp3" type="audio/mpeg"></audio>
-<audio id="music-orchestral" loop preload="none"><source src="music/orchestral.mp3" type="audio/mpeg"></audio>
-<audio id="music-ambient" loop preload="none"><source src="music/ambient.mp3" type="audio/mpeg"></audio>
 
 <script>
 /* =========================================================
@@ -544,7 +532,7 @@ function initStars(n){
   }
 }
 initStars(220);
-let starDim = 1; // dim factor for scenes where field is not focus
+let starDim = 1;
 
 function drawStars(dt, alphaMul){
   for(const s of stars){
@@ -557,7 +545,6 @@ function drawStars(dt, alphaMul){
   }
 }
 
-// generic particle effect list
 let effects = [];
 
 function spawnMeteors(count){
@@ -636,7 +623,6 @@ function textPoints(text, fontSizePx){
       if(data[(y*W+x)*4+3] > 120) pts.push({x,y});
     }
   }
-  // subsample for perf
   const max = 500;
   if(pts.length>max){
     const step = pts.length/max;
@@ -647,7 +633,6 @@ function textPoints(text, fontSizePx){
 }
 
 function spawnTextFormation(words, onDone){
-  // words: array of strings, shown sequentially
   let wi = 0;
   function runWord(){
     if(wi >= words.length){ if(onDone) onDone(); return; }
@@ -671,9 +656,6 @@ function spawnTextFormation(words, onDone){
             p.x += p.vx; p.y += p.vy;
             p.vx *= 0.98; p.vy*=0.98;
           }
-        }
-        if(this.frame > this.gatherFrames && this.frame <= this.gatherFrames+1){
-          // snap
         }
         if(this.frame > this.gatherFrames+this.holdFrames && this.particles[0].phase!=='explode'){
           for(const p of this.particles){
@@ -705,7 +687,6 @@ function spawnTextFormation(words, onDone){
       }
     });
     const effRef = effects[effects.length-1];
-    // schedule next word once this one is done
     const checkDone = ()=>{
       if(effRef.done()){ wi++; setTimeout(runWord, 250); }
       else setTimeout(checkDone, 100);
@@ -829,342 +810,353 @@ loop();
 /* =========================================================
    DOM GENERATORS: sunflowers, balloons, fireflies, petals, candles, sparkles
    ========================================================= */
-function el(tag, cls, parent){ const e=document.createElement(tag); if(cls) e.className=cls; if(parent) parent.appendChild(e); return e; }
-
-function sunflowerSVG(size){
-  return `<svg width="${size}" height="${size*1.4}" viewBox="0 0 100 140">
-    <line x1="50" y1="60" x2="50" y2="140" stroke="#3f6b2e" stroke-width="4"/>
-    <g>
-      ${Array.from({length:12}).map((_,i)=>`<ellipse cx="50" cy="30" rx="9" ry="20" fill="#F4C430" transform="rotate(${i*30} 50 50)"/>`).join('')}
-    </g>
-    <circle cx="50" cy="50" r="16" fill="#7a4a1e"/>
-    <circle cx="50" cy="50" r="16" fill="url(#dot)" opacity="0.3"/>
-  </svg>`;
+function el(tag, cls, parent){ 
+  const e=document.createElement(tag); 
+  if(cls) e.className=cls; 
+  if(parent) parent.appendChild(e); 
+  return e; 
 }
 
-function buildField(){
+function buildSunflowers(){
   const row = document.getElementById('fieldRow');
-  row.innerHTML='';
-  const count = 14;
-  for(let i=0;i<count;i++){
-    const wrap = el('div','sunflower',row);
-    const size = 60+Math.random()*50;
-    wrap.style.left = (i*(100/count) + Math.random()*4)+'%';
-    wrap.style.width = size+'px';
-    wrap.style.animationDuration = (3+Math.random()*2)+'s';
-    wrap.style.animationDelay = (Math.random()*2)+'s';
-    wrap.innerHTML = sunflowerSVG(size);
-  }
-  // fireflies
-  for(let i=0;i<18;i++){
-    const f = el('div','firefly',row);
-    f.style.left = Math.random()*100+'%';
-    f.style.top = (20+Math.random()*60)+'%';
-    f.style.animationDelay = (Math.random()*3)+'s, '+(Math.random()*8)+'s';
-  }
-  // petals
-  for(let i=0;i<16;i++){
-    const p = el('div','petal',row);
-    p.style.left = Math.random()*100+'%';
-    p.style.animationDuration = (6+Math.random()*5)+'s';
-    p.style.animationDelay = (Math.random()*6)+'s';
-  }
-  // butterflies
-  for(let i=0;i<5;i++){
-    const b = el('div','butterfly',row);
-    b.textContent = '🦋';
-    b.style.left = (10+Math.random()*80)+'%';
-    b.style.top = (10+Math.random()*40)+'%';
-    b.style.animationDuration = (5+Math.random()*3)+'s';
-    b.style.animationDelay = (Math.random()*2)+'s';
-    if(i===0){
-      setTimeout(()=>{
-        b.classList.add('landed');
-        const sp = el('div','sparkle-burst',row);
-        sp.style.left = b.style.left; sp.style.top = b.style.top;
-      }, 4200);
-    }
+  if(!row || row.children.length > 0) return;
+  const count = Math.floor(W / 45);
+  for(let i=0; i<count; i++){
+    const sf = el('div', 'sunflower', row);
+    const scale = 0.6 + Math.random()*0.6;
+    sf.style.left = (i * (100/count) + Math.random()*2) + '%';
+    sf.style.animationDelay = (Math.random()*2) + 's';
+    sf.style.animationDuration = (3 + Math.random()*2) + 's';
+    sf.innerHTML = `<svg width="${40*scale}" height="${90*scale}" viewBox="0 0 60 120">
+      <path d="M30 120 Q35 70 30 40" stroke="#2d5a27" stroke-width="4" fill="none"/>
+      <ellipse cx="20" cy="80" rx="12" ry="5" fill="#2d5a27" transform="rotate(-20 20 80)"/>
+      <ellipse cx="40" cy="70" rx="12" ry="5" fill="#2d5a27" transform="rotate(20 40 70)"/>
+      <g transform="translate(30,40)">
+        ${Array.from({length:12}).map((_,j)=>`<ellipse cx="0" cy="-18" rx="4" ry="14" fill="#F4C430" transform="rotate(${j*30})"/>`).join('')}
+        <circle cx="0" cy="0" r="10" fill="#4a2c11"/>
+      </g>
+    </svg>`;
   }
 }
 
 function buildBalloons(){
   const field = document.getElementById('balloonField');
-  field.innerHTML='';
-  const colors = ['balloon-gold','balloon-pink','balloon-white'];
-  for(let i=0;i<16;i++){
-    const wrap = el('div','balloon-wrap',field);
-    wrap.style.left = Math.random()*90+'%';
-    wrap.style.animationDuration = (4+Math.random()*3)+'s';
-    wrap.style.animationDelay = (Math.random()*2)+'s';
-    const body = el('div','balloon-body '+colors[i%3],wrap);
-    body.style.animationDuration = (7+Math.random()*4)+'s';
-    body.style.animationDelay = (Math.random()*3)+'s';
+  if(!field || field.children.length > 0) return;
+  const colors = ['balloon-gold', 'balloon-pink', 'balloon-white'];
+  for(let i=0; i<15; i++){
+    const wrap = el('div', 'balloon-wrap', field);
+    wrap.style.left = (Math.random()*90) + '%';
+    wrap.style.animationDuration = (4 + Math.random()*3) + 's';
+    wrap.style.animationDelay = (Math.random()*3) + 's';
+
+    const body = el('div', `balloon-body ${colors[i%colors.length]}`, wrap);
+    body.style.animationDuration = (8 + Math.random()*6) + 's';
+    body.style.animationDelay = (Math.random()*4) + 's';
   }
 }
 
-function buildCandles(n){
+function buildCandles(){
   const row = document.getElementById('candlesRow');
-  row.innerHTML='';
-  const candles = [];
-  for(let i=0;i<n;i++){
-    const c = el('div','candle',row);
-    c.innerHTML = '<div class="flame"></div>';
-    candles.push(c);
+  if(!row || row.children.length > 0) return;
+  for(let i=0; i<5; i++){
+    const c = el('div', 'candle lit', row);
+    el('div', 'flame', c);
   }
-  return candles;
 }
 
-function buildSparkleRain(){
+function spawnFireflies(){
+  const scene = document.getElementById('scene-field');
+  for(let i=0; i<12; i++){
+    const ff = el('div', 'firefly', scene);
+    ff.style.left = Math.random()*100 + '%';
+    ff.style.top = (20 + Math.random()*60) + '%';
+    ff.style.animationDelay = Math.random()*3 + 's';
+  }
+}
+
+function spawnPetals(){
+  const scene = document.getElementById('scene-field');
+  for(let i=0; i<10; i++){
+    const p = el('div', 'petal', scene);
+    p.style.left = Math.random()*100 + '%';
+    p.style.animationDuration = (6 + Math.random()*4) + 's';
+    p.style.animationDelay = Math.random()*5 + 's';
+  }
+}
+
+function spawnButterflies(){
+  const scene = document.getElementById('scene-field');
+  for(let i=0; i<3; i++){
+    const b = el('div', 'butterfly', scene);
+    b.textContent = '🦋';
+    b.style.left = (20 + i*30) + '%';
+    b.style.top = (30 + Math.random()*30) + '%';
+    b.style.animationDelay = i*1.5 + 's';
+  }
+}
+
+function spawnSparklesRain(){
   const field = document.getElementById('sparkleField');
-  field.innerHTML='';
-  for(let i=0;i<40;i++){
-    const s = el('div','sparkle-rain',field);
-    s.style.left = Math.random()*100+'%';
-    s.style.animationDuration = (2.5+Math.random()*2.5)+'s';
-    s.style.animationDelay = (Math.random()*2)+'s';
+  if(!field) return;
+  field.innerHTML = '';
+  for(let i=0; i<40; i++){
+    const sp = el('div', 'sparkle-rain', field);
+    sp.style.left = Math.random()*100 + '%';
+    sp.style.animationDuration = (2 + Math.random()*3) + 's';
+    sp.style.animationDelay = Math.random()*3 + 's';
   }
 }
 
 /* =========================================================
-   SCENE MANAGER
+   KRISHNA BANSURI (FLUTE) WEB AUDIO SYNTHESIZER
    ========================================================= */
-const sceneEls = {};
-document.querySelectorAll('.scene').forEach(s=>sceneEls[s.id]=s);
-let currentScene = 'scene-loading';
-function showScene(id){
-  Object.values(sceneEls).forEach(s=>s.classList.remove('active'));
-  sceneEls[id].classList.add('active');
-  currentScene = id;
+let audioCtx = null;
+let isMuted = true;
+let fluteTimer = null;
+
+const fluteNotes = [
+  { freq: 261.63, duration: 2.2 }, // Sa (C4)
+  { freq: 293.66, duration: 1.8 }, // Re (D4)
+  { freq: 329.63, duration: 2.5 }, // Ga (E4)
+  { freq: 392.00, duration: 2.0 }, // Pa (G4)
+  { freq: 440.00, duration: 2.4 }, // Dha (A4)
+  { freq: 523.25, duration: 3.5 }  // High Sa (C5)
+];
+
+function playFluteTone(freq, duration) {
+  if (isMuted) return;
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const filter = audioCtx.createBiquadFilter();
+
+  osc.type = 'sine';
+  filter.type = 'lowpass';
+  filter.frequency.value = 1400;
+
+  // Natural breath vibrato
+  const vibrato = audioCtx.createOscillator();
+  const vibratoGain = audioCtx.createGain();
+  vibrato.frequency.value = 5.2;
+  vibratoGain.gain.value = 2.8;
+  vibrato.connect(osc.frequency);
+  vibrato.start(now);
+
+  // Breath envelope
+  gain.gain.setValueAtTime(0.001, now);
+  gain.gain.linearRampToValueAtTime(0.2, now + 0.3);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+  osc.connect(filter);
+  filter.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start(now);
+  osc.stop(now + duration);
 }
 
-function goTo(id, setup){
-  sceneEls[currentScene].classList.remove('active');
-  setTimeout(()=>{
-    sceneEls[id].classList.add('active');
-    currentScene = id;
-    if(setup) setup();
-  }, 200);
+function startFluteMelody() {
+  let idx = 0;
+  function loopMelody() {
+    if (isMuted) return;
+    const note = fluteNotes[idx];
+    playFluteTone(note.freq, note.duration);
+    idx = (idx + 1) % fluteNotes.length;
+    fluteTimer = setTimeout(loopMelody, (note.duration + 0.2) * 1000);
+  }
+  loopMelody();
 }
 
-/* ---- Scene 1: loading ---- */
-setTimeout(()=>{ document.getElementById('progressFill').style.width='100%'; }, 2200);
-setTimeout(()=>{ goTo('scene-intro'); playMusic('none'); }, 5200);
+const muteBtn = document.getElementById('mute-toggle');
+muteBtn.addEventListener('click', () => {
+  isMuted = !isMuted;
+  if (!isMuted) {
+    muteBtn.textContent = '🔊';
+    startFluteMelody();
+  } else {
+    muteBtn.textContent = '🪈';
+    clearTimeout(fluteTimer);
+  }
+});
 
-/* ---- Scene 2: intro ---- */
-document.getElementById('beginBtn').addEventListener('click', ()=>{
-  playMusic('piano');
-  starDim = 1;
-  goTo('scene-flight', ()=>{
-    spawnMeteors(10);
-    setTimeout(()=>{
-      goTo('scene-name', ()=>{
-        spawnTextFormation(['AAKRITI','GAHIRE'], ()=>{
-          setTimeout(()=>{
-            playMusic('strings');
-            goTo('scene-sunrise', ()=>{
-              setTimeout(()=>{
-                starDim = 0.15;
-                goTo('scene-field', ()=>{
-                  buildField();
-                  setTimeout(()=>{
-                    starDim = 0.1;
-                    goTo('scene-balloons', ()=>{
-                      buildBalloons();
-                      setTimeout(()=>{
-                        playMusic('orchestral');
-                        goTo('scene-cake', ()=>{
-                          const candles = buildCandles(5);
-                          candles.forEach((c,i)=>{
-                            setTimeout(()=>c.classList.add('lit'), 500+i*550);
-                          });
-                          setTimeout(()=>{
-                            document.getElementById('cakeCaption').style.animation='fadeIn2 1.5s ease forwards';
-                          }, 3400);
-                          setTimeout(()=>{
-                            goTo('scene-fireworks', ()=>{
-                              spawnFireworks(4500);
-                              setTimeout(()=>{
-                                goTo('scene-envelope');
-                              }, 5200);
-                            });
-                          }, 6200);
-                        });
-                      }, 5200);
-                    });
-                  }, 5800);
-                });
-              }, 4700);
-            });
-          }, 500);
-        });
+/* =========================================================
+   SCENE NAVIGATION CONTROLLER
+   ========================================================= */
+const scenes = Array.from(document.querySelectorAll('.scene'));
+let currentSceneIdx = 0;
+
+function showScene(idx){
+  scenes.forEach((s, i) => {
+    if(i === idx){
+      s.classList.add('active');
+    } else {
+      s.classList.remove('active');
+    }
+  });
+  currentSceneIdx = idx;
+  handleSceneEnter(idx);
+}
+
+function handleSceneEnter(idx){
+  const sceneId = scenes[idx].id;
+
+  if(sceneId === 'scene-loading'){
+    const fill = document.getElementById('progressFill');
+    setTimeout(() => { if(fill) fill.style.width = '100%'; }, 200);
+    setTimeout(() => { showScene(1); }, 3200); // go to intro
+  }
+  else if(sceneId === 'scene-flight'){
+    starDim = 1.5;
+    spawnMeteors(8);
+    setTimeout(() => {
+      spawnShootingStar(() => {
+        showScene(3); // name reveal
       });
-    }, 3000);
-  });
-});
-
-/* ---- Scene: envelope + letter ---- */
-document.getElementById('envelope').addEventListener('click', function(){
-  this.classList.add('open');
-  setTimeout(()=>{
-    playMusic('piano');
-    document.getElementById('letterOverlay').classList.add('show');
-  }, 700);
-});
-document.getElementById('letterCloseBtn').addEventListener('click', ()=>{
-  document.getElementById('letterOverlay').classList.remove('show');
-  goTo('scene-sparkles', ()=>{
-    buildSparkleRain();
-    setTimeout(()=>{ goTo('scene-wish'); }, 3600);
-  });
-});
-
-/* ---- Scene: wish ---- */
-document.getElementById('wishBtn').addEventListener('click', function(){
-  this.disabled = true;
-  spawnShootingStar(()=>{
-    playMusic('ambient');
-    starDim = 1;
-    goTo('scene-night', ()=>{
-      // fireflies over night scene reuse petal-like glow (lightweight)
-      setTimeout(()=>{
-        goTo('scene-transform', ()=>{
-          spawnMorph(()=>{
-            goTo('scene-final', ()=>{ runFinalSequence(); });
-          });
-        });
-      }, 4200);
+    }, 2500);
+  }
+  else if(sceneId === 'scene-name'){
+    starDim = 0.5;
+    spawnTextFormation(['Aakriti', 'Aakriti Gahire'], () => {
+      setTimeout(() => showScene(4), 1000); // sunrise
     });
-  });
-});
+  }
+  else if(sceneId === 'scene-sunrise'){
+    starDim = 0.2;
+    setTimeout(() => showScene(5), 5500); // sunflower field
+  }
+  else if(sceneId === 'scene-field'){
+    buildSunflowers();
+    spawnFireflies();
+    spawnPetals();
+    spawnButterflies();
+    setTimeout(() => showScene(6), 6000); // balloons
+  }
+  else if(sceneId === 'scene-balloons'){
+    buildBalloons();
+    setTimeout(() => showScene(7), 5500); // cake
+  }
+  else if(sceneId === 'scene-cake'){
+    buildCandles();
+    setTimeout(() => {
+      const cap = document.getElementById('cakeCaption');
+      if(cap) cap.style.opacity = '1';
+    }, 1000);
+    setTimeout(() => showScene(8), 5500); // fireworks
+  }
+  else if(sceneId === 'scene-fireworks'){
+    spawnFireworks(4000);
+    setTimeout(() => showScene(9), 5000); // envelope
+  }
+  else if(sceneId === 'scene-envelope'){
+    // Waits for user click on envelope
+  }
+  else if(sceneId === 'scene-sparkles'){
+    spawnSparklesRain();
+    setTimeout(() => showScene(11), 4000); // wish
+  }
+  else if(sceneId === 'scene-wish'){
+    // Waits for click on wishBtn
+  }
+  else if(sceneId === 'scene-night'){
+    starDim = 1.2;
+    setTimeout(() => showScene(13), 4500); // transform
+  }
+  else if(sceneId === 'scene-transform'){
+    spawnMorph(() => {
+      showScene(14); // final
+    });
+  }
+  else if(sceneId === 'scene-final'){
+    runFinalSequence();
+  }
+}
 
-/* ---- Final sequence ---- */
 function runFinalSequence(){
   const lines = document.querySelectorAll('#scene-final .final-line');
-  lines.forEach(l=>l.classList.remove('show'));
-  let i=0;
-  function next(){
-    lines.forEach(l=>l.classList.remove('show'));
-    if(i>=lines.length) return;
-    lines[i].classList.add('show');
-    if(i < lines.length-1){
-      setTimeout(()=>{ i++; next(); }, 4200);
-    } else {
-      lines[i].style.animation = 'fadeIn2 3s ease forwards';
+  let i = 0;
+  function showNextLine(){
+    if(i > 0) lines[i-1].classList.remove('show');
+    if(i < lines.length){
+      lines[i].classList.add('show');
+      i++;
+      setTimeout(showNextLine, 3800);
     }
   }
-  next();
+  showNextLine();
 }
 
-document.getElementById('replayBtn').addEventListener('click', ()=>{
-  location.reload();
+/* Setup UI Event Listeners */
+document.getElementById('beginBtn').addEventListener('click', () => {
+  // Unmute and start Krishna's flute sound on first user gesture
+  if(isMuted) {
+    isMuted = false;
+    muteBtn.textContent = '🔊';
+    startFluteMelody();
+  }
+  showScene(2); // transition to flight
 });
 
-/* =========================================================
-   MUSIC (silent by default unless mp3 files are supplied)
-   ========================================================= */
-const musicEls = {
-  none:null,
-  piano: document.getElementById('music-piano'),
-  strings: document.getElementById('music-strings'),
-  orchestral: document.getElementById('music-orchestral'),
-  ambient: document.getElementById('music-ambient'),
-};
-let muted = false;
-let currentMusic = null;
-function playMusic(key){
-  if(currentMusic) { currentMusic.pause(); }
-  const track = musicEls[key];
-  if(!track){ currentMusic=null; return; }
-  currentMusic = track;
-  track.volume = 0.55;
-  if(!muted){ track.play().catch(()=>{}); }
+const envelope = document.getElementById('envelope');
+const letterOverlay = document.getElementById('letterOverlay');
+const letterCloseBtn = document.getElementById('letterCloseBtn');
+
+if(envelope){
+  envelope.addEventListener('click', () => {
+    envelope.classList.add('open');
+    setTimeout(() => {
+      letterOverlay.classList.add('show');
+    }, 800);
+  });
 }
-document.getElementById('mute-toggle').addEventListener('click', function(){
-  muted = !muted;
-  this.textContent = muted ? '🔇' : '🔈';
-  if(currentMusic){ if(muted) currentMusic.pause(); else currentMusic.play().catch(()=>{}); }
-});
 
-/* =========================================================
-   EASTER EGG: press "S" three times
-   ========================================================= */
-let sPresses = [];
-window.addEventListener('keydown', (e)=>{
-  if(e.key.toLowerCase() !== 's') return;
-  const now = Date.now();
-  sPresses = sPresses.filter(t => now - t < 2200);
-  sPresses.push(now);
-  if(sPresses.length >= 3){
-    sPresses = [];
+if(letterCloseBtn){
+  letterCloseBtn.addEventListener('click', () => {
+    letterOverlay.classList.remove('show');
+    showScene(10); // sparkles
+  });
+}
+
+const wishBtn = document.getElementById('wishBtn');
+if(wishBtn){
+  wishBtn.addEventListener('click', () => {
+    spawnFireworks(2500);
+    setTimeout(() => {
+      showScene(12); // night
+    }, 2000);
+  });
+}
+
+const replayBtn = document.getElementById('replayBtn');
+if(replayBtn){
+  replayBtn.addEventListener('click', () => {
+    const lines = document.querySelectorAll('#scene-final .final-line');
+    lines.forEach(l => l.classList.remove('show'));
+    showScene(0); // restart journey from loading
+  });
+}
+
+// Easter Egg counter
+let clickCount = 0;
+document.addEventListener('click', (e) => {
+  if(e.target.closest('#mute-toggle') || e.target.closest('.btn') || e.target.closest('.envelope')) return;
+  clickCount++;
+  if(clickCount === 7){
     const egg = document.getElementById('easter-egg');
-    egg.classList.add('show');
-    setTimeout(()=>egg.classList.remove('show'), 4200);
-  }
-});
-</script><!-- Flute Music Code Start -->
-<script>
-  let audioCtx = null;
-  let isPlayingFlute = false;
-  let fluteTimer = null;
-
-  const fluteNotes = [
-    { freq: 261.63, duration: 2.0 },
-    { freq: 293.66, duration: 1.5 },
-    { freq: 329.63, duration: 2.5 },
-    { freq: 392.00, duration: 1.8 },
-    { freq: 440.00, duration: 2.2 },
-    { freq: 523.25, duration: 3.2 }
-  ];
-
-  function playFluteTone(freq, duration) {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const now = audioCtx.currentTime;
-
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    const filter = audioCtx.createBiquadFilter();
-
-    osc.type = 'sine';
-    filter.type = 'lowpass';
-    filter.frequency.value = 1400;
-
-    const vibrato = audioCtx.createOscillator();
-    const vibratoGain = audioCtx.createGain();
-    vibrato.frequency.value = 5.2;
-    vibratoGain.gain.value = 2.8;
-    vibrato.connect(osc.frequency);
-    vibrato.start(now);
-
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.linearRampToValueAtTime(0.2, now + 0.3);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start(now);
-    osc.stop(now + duration);
-  }
-
-  function toggleFluteMusic() {
-    if (!isPlayingFlute) {
-      isPlayingFlute = true;
-      let idx = 0;
-      const playNext = () => {
-        if (!isPlayingFlute) return;
-        const note = fluteNotes[idx];
-        playFluteTone(note.freq, note.duration);
-        idx = (idx + 1) % fluteNotes.length;
-        fluteTimer = setTimeout(playNext, (note.duration + 0.1) * 1000);
-      };
-      playNext();
-    } else {
-      isPlayingFlute = false;
-      clearTimeout(fluteTimer);
+    if(egg){
+      egg.classList.add('show');
+      setTimeout(() => {
+        egg.classList.remove('show');
+        clickCount = 0;
+      }, 4000);
     }
   }
+});
+
+// Start the experience on load
+showScene(0);
 </script>
-<!-- Flute Music Code End -->  
 </body>
 </html>
